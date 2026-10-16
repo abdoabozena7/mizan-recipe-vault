@@ -1,0 +1,13 @@
+*.xlsx
+*.xls
+*.heic
+*.png
+*.jpg
+*.jpeg
+*PRIVATE*KEY*
+*.env
+.env*
+__pycache__/
+*.pyc
+recipes.json
+plaintext*.json

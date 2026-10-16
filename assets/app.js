@@ -9,7 +9,7 @@
   const td = new TextDecoder();
   const $ = id => document.getElementById(id);
   const state = { doc:null, envelope:null, key:null, selectedId:null, category:'الكل',
-    query:'', weight:100, editorId:null, basketOpen:false, remoteEnvelope:null, usingLocal:false,
+    query:'', weight:100, step:1, editorId:null, basketOpen:false, remoteEnvelope:null, usingLocal:false,
     saveQueue:Promise.resolve(), editorScratch:[], toastTimeout:null };
   const units = ['كيلو','جرام','لتر','عدد','كجم','جم'];
   const escapeHTML = x => String(x ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -89,7 +89,7 @@
   }
   function activate(doc,e,k,isLocal){
     state.doc=doc;state.envelope=e;state.key=k;state.usingLocal=isLocal;state.category='الكل';state.query='';
-    state.selectedId=doc.recipes[0]?.id??null;state.weight=100;
+    state.selectedId=null;state.weight=100;state.step=1;
     $('lockScreen').hidden=true;$('workspace').hidden=false;$('recipeSearch').value='';
     $('currentYear').textContent=new Date().getFullYear();
     updateStatus();renderAll();
@@ -114,7 +114,45 @@
     });
     await state.saveQueue;
   }
-  function renderAll(){renderStats();renderCategories();renderList();renderRecipe();renderBasketBadge();if(state.basketOpen)renderBasket();}
+  function renderAll(){renderStats();renderCategories();renderList();renderRecipe();renderBasketBadge();if(state.basketOpen)renderBasket();updateWizardChoice();showStep(state.step||1,false);}
+
+  // Progressive three-step workflow: choose a recipe -> enter batch weight -> see the result.
+  // All calculations and encryption remain in the original client-only logic above.
+  function updateWizardChoice(){
+    const r=getSelected();
+    $('selectedRecipeName').textContent=r?.name||'لم يتم اختيار خلطة بعد';
+    $('selectedRecipeCategory').textContent=r?categoryDisplay(r.category):'اختار الخلطة من القائمة';
+    $('stepChooseNext').disabled=!r;
+  }
+  function showStep(next,focus=true){
+    if(!state.doc||!Number.isInteger(next)||next<1||next>3)return;
+    if(next>=2&&!getSelected()){toast('اختار الخلطة الأول',true);return;}
+    if(next===3){
+      const raw=$('batchWeight').value.trim(),weight=Number(raw);
+      if(!raw||!Number.isFinite(weight)||weight<=0||weight>1e9){
+        toast('اكتب كمية صحيحة أكبر من صفر',true);
+        $('batchWeight').focus();return;
+      }
+      state.weight=weight;
+      renderRecipe();
+    }
+    state.step=next;
+    for(let i=1;i<=3;i++)$('step'+i).hidden=next!==i;
+    $('stepNav').querySelectorAll('[data-go-step]').forEach(btn=>{
+      const n=Number(btn.dataset.goStep),current=n===next;
+      btn.disabled=n>next;
+      btn.classList.toggle('is-current',current);
+      btn.classList.toggle('is-complete',n<next);
+      if(current)btn.setAttribute('aria-current','step');
+      else btn.removeAttribute('aria-current');
+    });
+    $('stepProgress').style.width=(next/3*100)+'%';
+    if(focus){
+      window.scrollTo({top:0,behavior:'smooth'});
+      const h=$('step'+next).querySelector('h2');
+      if(h)h.focus({preventScroll:true});
+    }
+  }
   function renderStats(){
     $('totalRecipes').textContent=num(state.doc.recipes.length,0);
     $('totalCategories').textContent=num(new Set(state.doc.recipes.map(x=>x.category)).size,0);
@@ -139,13 +177,14 @@
   function setRecipe(id){
     const r=state.doc.recipes.find(x=>x.id===id);if(!r)return;
     state.selectedId=id;state.weight=100;$('batchWeight').value='100';
-    $('sidebar').classList.remove('open');
-    renderList();renderRecipe();
+    renderList();renderRecipe();updateWizardChoice();
   }
   function renderRecipe(){
-    let r=getSelected();if(!r&&state.doc.recipes.length){r=state.doc.recipes[0];state.selectedId=r.id;}
+    let r=getSelected();
     if(!r){$('recipeView').hidden=true;return;}$('recipeView').hidden=false;
     $('recipeTitle').textContent=r.name;
+    $('confirmedRecipe').textContent=r.name;
+    $('confirmedWeight').textContent=num(state.weight,3)+' كيلو';
     $('recipeCategory').textContent=categoryDisplay(r.category);
     $('recipeStatus').textContent=r.archived?'وصفة قديمة / راجعها':'وصفة محفوظة';
     $('recipeSource').textContent=`المصدر: ${r.source?.sheet||'إضافة يدوية'} · ${r.source?.header||'—'}${r.notes?' · '+r.notes:''}`;
@@ -216,7 +255,7 @@
     state.doc.basket.push({id:'b-'+crypto.randomUUID(),recipeId:r.id,name:r.name,batch:state.weight,
       createdAt:nowISO(),ingredients:r.ingredients.map(i=>({name:i.name,unit:i.unit,qty:safeNum(i.perKg)*state.weight}))});
     state.basketOpen=true;renderBasket();await saveLocal();toast('تمت إضافة الخلطة لقائمة التجهيز ✓');
-    $('basketPanel').scrollIntoView({behavior:'smooth',block:'start'});
+    $('closeBasketBtn').focus();
   }
   function csvEscape(s){let val=String(s??'');if(/^[=+@\-\t\r]/.test(val))val="'"+val;return '"'+val.replaceAll('"','""')+'"';}
   function downloadFile(name,text,mime){
@@ -251,7 +290,7 @@
     if(!window.confirm(`هتستبدل النسخة الحالية بـ ${doc.recipes.length} خلطة من الملف المختار. استمرار؟`))return;
     state.doc=doc;
     // Keep the original local key: imported plaintext is encrypted under the current user's key.
-    state.selectedId=doc.recipes[0]?.id??null;
+    state.selectedId=null;state.step=1;
     await saveLocal();renderAll();toast('تم استيراد نسخة مشفرة وحفظها محليًا');
   }
   async function resetRemote(){
@@ -279,7 +318,7 @@
     $('workspace').hidden=true;$('lockScreen').hidden=false;
     state.doc=null;state.key=null;state.envelope=null;state.selectedId=null;state.editorScratch=[];
     $('passwordInput').value='';$('unlockMessage').textContent='';
-    $('sidebar').classList.remove('open');$('editorOverlay').hidden=true;closeNotes();$('toolsMenu').open=false;
+    state.step=1;$('editorOverlay').hidden=true;$('basketPanel').hidden=true;state.basketOpen=false;closeNotes();$('toolsMenu').open=false;
     $('ingredientBody').textContent='';$('compositionBars').textContent='';$('recipeList').textContent='';$('recipeTitle').textContent='';
     window.scrollTo(0,0);
   }
@@ -352,13 +391,13 @@
       reviewCount:editedItems.filter(i=>i.flags?.length).length});
     if(!existing)state.doc.recipes.push(recipe);
     state.selectedId=recipe.id;state.category='الكل';state.query='';$('recipeSearch').value='';
-    closeEditor();await saveLocal();renderAll();toast('تم حفظ الخلطة مشفرة على الجهاز ✓');
+    closeEditor();state.step=2;await saveLocal();renderAll();toast('تم حفظ الخلطة مشفرة على الجهاز ✓');
   }
   async function deleteEditorRecipe(){
     const id=state.editorId,r=state.doc.recipes.find(x=>x.id===id);if(!r)return;
     if(!window.confirm(`هل تريد حذف خلطة "${r.name}" من نسختك المحلية؟`))return;
     state.doc.recipes=state.doc.recipes.filter(x=>x.id!==id);
-    state.selectedId=state.doc.recipes[0]?.id??null;closeEditor();await saveLocal();renderAll();toast('تم حذف الخلطة محليًا');
+    state.selectedId=null;state.step=1;closeEditor();await saveLocal();renderAll();toast('تم حذف الخلطة محليًا');
   }
   function bind(){
     $('unlockForm').addEventListener('submit',async e=>{
@@ -375,8 +414,12 @@
       renderCategories();renderList();
     });
     $('recipeList').addEventListener('click',e=>{const b=e.target.closest('[data-recipe-id]');if(b)setRecipe(b.dataset.recipeId);});
-    $('mobileRecipes').addEventListener('click',()=>$('sidebar').classList.toggle('open'));
-    document.addEventListener('click',e=>{if(window.innerWidth<=760&&$('sidebar').classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('#mobileRecipes'))$('sidebar').classList.remove('open');});
+    $('stepChooseNext').addEventListener('click',()=>showStep(2));
+    $('stepWeightBack').addEventListener('click',()=>showStep(1));
+    $('stepWeightNext').addEventListener('click',()=>showStep(3));
+    $('stepResultBack').addEventListener('click',()=>showStep(2));
+    $('stepResultAgain').addEventListener('click',()=>{state.selectedId=null;state.query='';state.category='الكل';$('recipeSearch').value='';renderCategories();renderList();updateWizardChoice();showStep(1);});
+    $('stepNav').addEventListener('click',e=>{const btn=e.target.closest('[data-go-step]');if(btn&&!btn.disabled)showStep(Number(btn.dataset.goStep));});
     $('batchWeight').addEventListener('input',e=>{
       const x=toNum(e.target.value);if(x===null||x<=0||x>1e9)return;
       state.weight=x;renderRecipe();
@@ -385,7 +428,8 @@
     $('addBasketBtn').addEventListener('click',()=>addBasket().catch(e=>toast(e.message,true)));
     $('notesToggle').addEventListener('click',openNotes);
     $('notesOverlay').addEventListener('click',e=>{if(e.target.closest('[data-action="close-notes"]'))closeNotes();});
-    $('basketToggle').addEventListener('click',()=>{state.basketOpen=!state.basketOpen;$('basketPanel').hidden=!state.basketOpen;if(state.basketOpen){renderBasket();$('basketPanel').scrollIntoView({behavior:'smooth',block:'start'});}});
+    $('basketToggle').addEventListener('click',()=>{state.basketOpen=!state.basketOpen;$('basketPanel').hidden=!state.basketOpen;if(state.basketOpen){renderBasket();$('closeBasketBtn').focus();}});
+    $('basketPanel').addEventListener('click',e=>{if(e.target.closest('[data-action="close-basket"]')){state.basketOpen=false;$('basketPanel').hidden=true;}});
     $('closeBasketBtn').addEventListener('click',()=>{state.basketOpen=false;$('basketPanel').hidden=true;});
     $('basketEntries').addEventListener('click',e=>{
       const b=e.target.closest('[data-remove-basket]');if(!b)return;
@@ -411,7 +455,7 @@
     $('changePass').addEventListener('click',()=>changePass().catch(e=>toast(e.message,true)));
     $('toolsMenu').addEventListener('click',e=>{if(e.target.closest('button'))$('toolsMenu').open=false;});
     $('lockBtn').addEventListener('click',lock);
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('editorOverlay').hidden)closeEditor();if(e.key==='Escape'&&!$('notesOverlay').hidden)closeNotes();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('editorOverlay').hidden)closeEditor();if(e.key==='Escape'&&!$('notesOverlay').hidden)closeNotes();if(e.key==='Escape'&&state.basketOpen){state.basketOpen=false;$('basketPanel').hidden=true;}});
   }
   async function init(){
     $('currentYear').textContent=new Date().getFullYear();

@@ -1,0 +1,170 @@
+/* Mizan — clean guided workflow. Overrides only the older visual layer. */
+:root{--m-bg:#f7f9f6;--m-ink:#20382d;--m-muted:#77877e;--m-primary:#235a42;--m-edge:#e4ece6;--m-soft:#ecf4e9}
+*,*::before,*::after{box-sizing:border-box}
+[hidden],#workspace[hidden],.flow-panel[hidden]{display:none!important}
+body{background:var(--m-bg);color:var(--m-ink);font-family:Tahoma,Arial,sans-serif}
+button,input,summary{-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #82c5a0;outline-offset:3px}
+.global-top{background:#193d2f;color:white;min-height:66px;padding:10px clamp(16px,4vw,52px);box-shadow:none}
+.brand-mark{background:#d7edc8;color:#27523b;border-radius:12px;width:41px;height:41px}
+.brand-copy strong{font-size:21px}.brand-copy small{opacity:.72}.top-end{opacity:.82;font-size:12px}
+.lock-screen{min-height:calc(100svh - 66px)}
+.workspace.flow-ready{display:block!important;min-height:calc(100svh - 66px);background:var(--m-bg)}
+.workspace.flow-ready .main-content{max-width:1020px;width:100%;margin:0 auto;padding:26px 22px 44px}
+.workspace.flow-ready .stats-grid,.workspace.flow-ready .hidden-stats,.workspace.flow-ready .mobile-nav{display:none!important}
+.workspace.flow-ready .headline-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin:0 0 22px}
+.workspace.flow-ready .headline-bar h1{font-size:clamp(20px,3vw,25px);font-weight:800;margin:0;color:var(--m-ink);line-height:1.4}
+.workspace.flow-ready .headline-bar p{margin:4px 0 0;color:var(--m-muted);font-size:12px;display:block}
+.workspace.flow-ready .breadcrumbs{display:none}
+.workspace.flow-ready .header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.workspace.flow-ready .header-actions>button,.workspace.flow-ready .flow-more>summary{display:flex;align-items:center;gap:7px;justify-content:center;min-height:39px;padding:7px 14px;border:1px solid #dae6dc;border-radius:10px;background:white;color:#416851;box-shadow:none;font-weight:700;font-size:12px}
+.workspace.flow-ready .header-actions .basket-count{border-radius:20px;padding:1px 7px;background:#e8f3e4;color:#31734f}
+.flow-more{position:relative}
+.flow-more>summary{cursor:pointer;list-style:none}.flow-more>summary::-webkit-details-marker{display:none}
+.flow-more-menu{position:absolute;top:calc(100% + 9px);left:0;width:230px;background:#fff;padding:7px;border:1px solid var(--m-edge);border-radius:13px;box-shadow:0 16px 35px #193b2a25;z-index:30;display:grid;gap:3px}
+.flow-more-menu button{border:0!important;border-radius:8px;width:100%;padding:10px 12px!important;text-align:right;justify-content:flex-start!important;display:block!important;font-size:12px!important;color:#395f48!important;background:white!important;box-shadow:none!important}
+.flow-more-menu button:hover{background:#f1f7ee!important}.flow-more-menu #lockBtn{color:#a34b43!important}
+.flow-shell{max-width:940px;margin:auto;scroll-margin-top:15px}
+.flow-progress{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 24px;padding:0 clamp(4px,4vw,40px)}
+.flow-progress button{background:transparent;color:#91a299;display:flex;align-items:center;justify-content:center;gap:9px;border:0;padding:7px 3px;font-size:12px;font-weight:700;white-space:nowrap}
+.flow-progress button:disabled{cursor:default;opacity:.6}
+.flow-progress button.is-active{color:#20583e}.flow-progress button.is-done{color:#32794f}
+.flow-circle{flex:none;width:34px;height:34px;border:1px solid #d5e4d8;border-radius:50%;display:grid;place-items:center;color:#799082;background:#fff;font-size:12px;font-weight:800}
+.flow-progress .is-active .flow-circle{background:var(--m-primary);color:#fff;border-color:var(--m-primary);box-shadow:0 0 0 5px #deeddc}
+.flow-progress .is-done .flow-circle{background:#e5f4dd;color:#247345;border-color:#c5e4c3}
+.flow-connector{flex:1 1 65px;max-width:130px;height:1px;background:#d9e5da}
+.flow-panel{min-height:470px;border:1px solid var(--m-edge);border-radius:19px;background:#fff;box-shadow:0 12px 32px #12332508;padding:clamp(17px,3.4vw,32px);animation:flowFade .16s ease-out}
+@keyframes flowFade{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.flow-heading{margin-bottom:22px}
+.flow-eyebrow{display:inline-flex;padding:3px 12px;color:#2f724e;background:#eaf5e5;border-radius:99px;font-size:11px;font-weight:800}
+.flow-heading h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;line-height:1.4;letter-spacing:-.4px;margin:12px 0 5px;color:#1b3c2b}
+.flow-heading p{color:#7d9083;font-size:13px;margin:0}
+.flow-btn{display:inline-flex;justify-content:center;align-items:center;border-radius:11px;border:1px solid transparent;min-height:45px;font-weight:800;font-size:13px;padding:11px 19px;cursor:pointer}
+.flow-btn-primary{color:#fff;background:#235a42}.flow-btn-primary:hover{background:#307151}
+.flow-btn-muted{background:#fff;border-color:#d8e5d9;color:#496b53}.flow-btn-muted:hover{background:#f0f6ed}
+.flow-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:20px;margin-top:21px;border-top:1px solid #edf2ed}
+.flow-foot-selection{margin-top:16px;color:#8c9b91;font-size:12px}
+.flow-foot-selection #newRecipeBtn{border:1px solid #d8e6d7;background:#fff;color:#376b4d;border-radius:9px;padding:9px 13px;min-height:38px;font-size:12px;font-weight:700}
+/* STEP 1 */
+.workspace.flow-ready #sidebar{display:flex!important;position:static!important;transform:none!important;width:100%!important;height:auto!important;max-height:none!important;overflow:visible!important;border:0!important;box-shadow:none!important;background:transparent!important;padding:0!important;gap:12px;flex-direction:column}
+.workspace.flow-ready #sidebar .sidebar-heading{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;color:#456b54;margin:0 0 2px;padding:0 1px}
+.workspace.flow-ready #recipeCounter{font-size:11px;color:#2e7a4a;background:#e8f4e7;border-radius:8px;padding:2px 9px}
+.workspace.flow-ready #sidebar .search-box{display:flex;align-items:center;gap:9px;border:1.5px solid #d8e7dc;background:#fbfdfb;border-radius:11px;padding:10px 14px;min-height:51px;box-shadow:none}
+.workspace.flow-ready #sidebar .search-box input{flex:1;min-width:0;width:100%;border:0;outline:none;background:transparent;font-size:14px;color:#234a35}
+.workspace.flow-ready #sidebar .search-box>span{color:#6a9676;font-size:25px}
+.workspace.flow-ready #sidebar .section-caption{display:none}
+.workspace.flow-ready #sidebar .sidebar-separator,.workspace.flow-ready #sidebar .sidebar-footer{display:none!important}
+.workspace.flow-ready #categoryNav{display:flex!important;flex-wrap:nowrap!important;gap:7px;overflow-x:auto;overflow-y:hidden;width:100%;max-width:100%;padding:3px 0 9px;min-height:48px;max-height:none!important;scrollbar-width:thin}
+.workspace.flow-ready #categoryNav button{width:auto!important;min-width:max-content;flex:0 0 auto!important;display:flex;gap:8px;align-items:center;border-radius:99px;border:1px solid #dfeadf;padding:7px 11px;font-size:11px;background:#fff;color:#6d8573;white-space:nowrap;min-height:34px}
+.workspace.flow-ready #categoryNav button.active{background:#235a42;border-color:#235a42;color:#fff}
+.workspace.flow-ready #categoryNav button .count{opacity:.7;font-size:10px}
+.workspace.flow-ready #categoryNav button.active .count{color:#edf9e9!important;opacity:1}
+.workspace.flow-ready #recipeList{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;align-content:start;width:100%;max-height:385px;min-height:105px;overflow-y:auto;overflow-x:hidden;border-radius:10px;padding:3px 4px 6px 0}
+.workspace.flow-ready #recipeList button{display:flex;width:100%;min-width:0;min-height:76px;text-align:right;justify-content:flex-start;align-items:center;gap:10px;padding:12px 14px;border-radius:11px;border:1px solid #e4ede5;background:#fff;box-shadow:none;color:#31563e;transition:background .1s,border-color .1s}
+.workspace.flow-ready #recipeList button:hover,.workspace.flow-ready #recipeList button.selected{background:#f1f8ed;border-color:#b7d5b8}
+.workspace.flow-ready #recipeList .recipe-mini-icon{display:none}
+.workspace.flow-ready #recipeList .recipe-mini-copy{flex:1;min-width:0}
+.workspace.flow-ready #recipeList .recipe-mini-copy b{display:block;font-size:12px;font-weight:800;white-space:normal;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.6}
+.workspace.flow-ready #recipeList .recipe-mini-copy small{display:block;margin-top:4px;font-size:10px;color:#90a092}
+.workspace.flow-ready #recipeList .recipe-caret{display:none}
+.workspace.flow-ready #recipeList .no-results{grid-column:1/-1;text-align:center;padding:30px 12px;font-size:13px;color:#7e9383}
+/* STEP 2 */
+#flowBatch .recipe-head-panel{width:100%;border:1px solid #e5ede4;background:#fafdf9;border-radius:14px;box-shadow:none;padding:clamp(17px,3vw,25px)}
+#flowBatch .recipe-detail-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+#flowBatch #recipeTitle{font-size:clamp(17px,2.5vw,23px);margin:7px 0 0;line-height:1.5;color:#234731}
+#flowBatch #recipeSource{display:none!important}
+#flowBatch .recipe-badges{display:flex;gap:7px;flex-wrap:wrap}
+#flowBatch .tag{background:#e9f5e8;color:#37724c;padding:3px 8px;font-size:10px;border-radius:7px}
+#flowBatch #editRecipeBtn{border:1px solid #deeadc;background:#fff;color:#51745c;border-radius:9px;padding:9px 12px;flex:none;font-size:12px}
+#flowBatch .batch-area{display:grid!important;grid-template-columns:1fr!important;gap:18px!important;border:0!important;padding:0!important;margin:0!important}
+#flowBatch .batch-input-group>label,#flowBatch .batch-presets>label{display:block;color:#52745b;font-size:12px;margin:0 0 8px;font-weight:800}
+#flowBatch .weight-field{display:flex;align-items:stretch;max-width:420px;border:2px solid #a3cbae;border-radius:13px;overflow:hidden;background:#fff}
+#flowBatch .weight-field input{border:0;background:white;min-width:0;width:100%;padding:13px 16px;font-size:33px;font-weight:800;color:#235a42;text-align:right;direction:ltr}
+#flowBatch .weight-field span{background:#e8f4e2;color:#37684a;display:grid;place-items:center;padding:0 23px;font-weight:800}
+#flowBatch #baseInfo{color:#8b9e8c;font-size:11px;margin-top:8px;display:block}
+#flowBatch .presets{display:flex;gap:8px;flex-wrap:wrap}
+#flowBatch .presets button{background:#fff;border:1px solid #dce9dd;border-radius:9px;padding:10px 13px;font-size:12px;min-width:45px;color:#55755b}
+#flowBatch .presets button.active{background:#dff2da;color:#235e3c;border-color:#9bcaab;font-weight:800}
+.flow-error{min-height:18px;margin:7px 0 0;color:#bb503d;font-size:12px}
+/* STEP 3 */
+.flow-result-title{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;padding:13px 17px;border-radius:12px;background:#eef6ea;color:#25533b;margin-bottom:16px}
+.flow-result-title strong{font-size:14px}
+.flow-result-title span{font-weight:800;background:white;padding:5px 10px;border-radius:8px;font-size:12px;white-space:nowrap}
+#flowResults #recipeView{display:flex!important;flex-direction:column-reverse!important;gap:15px;width:100%}
+#flowResults #recipeView[hidden]{display:none!important}
+#flowResults .recipe-column,#flowResults .side-column{min-width:0;width:100%;display:block!important}
+#flowResults .side-column>.composition-panel{display:none!important}
+#flowResults .sum-panel{display:flex!important;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;background:#f5faf3;border:1px solid #dfece0;border-radius:12px;box-shadow:none;color:#365b42;padding:13px 16px}
+#flowResults .sum-panel .section-kicker,#flowResults .sum-panel h3,#flowResults .sum-panel .big-number,#flowResults .sum-panel .sum-footnote{display:none!important}
+#flowResults .sum-panel .summary-line{display:flex;gap:8px;align-items:center;border:0;padding:0;font-size:11px;margin:0;color:#78907d;white-space:nowrap}
+#flowResults .sum-panel .summary-line strong{color:#265438;font-size:12px}
+#flowResults #addBasketBtn{width:auto!important;min-height:38px;padding:8px 12px;font-size:11px;background:#245a42;color:white;border-radius:9px;border:0;margin:0 auto 0 0}
+#flowResults .ingredients-panel{background:white;border:1px solid #e2ece3;border-radius:13px;overflow:hidden;box-shadow:none}
+#flowResults .ingredients-panel .panel-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:9px;align-items:center;border-bottom:1px solid #edf2ed;padding:15px 17px}
+#flowResults .ingredients-panel .section-kicker{display:none}
+#flowResults .ingredients-panel .panel-top h3{font-size:16px;margin:0;color:#254d36}
+#flowResults .panel-top-actions{display:flex;flex-wrap:wrap;gap:5px}
+#flowResults .panel-top-actions button{background:white;border:1px solid #e2ece3;color:#4d7559;font-size:11px;border-radius:8px;padding:6px 9px;min-height:32px}
+#flowResults .panel-top-actions .flow-detail-toggle{white-space:nowrap}
+#flowResults .ingredients-overflow{overflow-x:auto;max-width:100%}
+#flowResults .ingredients-table{width:100%;border-collapse:collapse;text-align:right;min-width:0}
+#flowResults .ingredients-table th,#flowResults .ingredients-table td{padding:12px 16px;border-bottom:1px solid #edf2ed;text-align:right;font-size:12px}
+#flowResults .ingredients-table th{background:#f8faf7;color:#748c7a;font-size:11px}
+#flowResults .ingredients-table th:nth-child(1),#flowResults .ingredients-table td:nth-child(1),#flowResults .ingredients-table th:nth-child(3),#flowResults .ingredients-table td:nth-child(3),#flowResults .ingredients-table th:nth-child(5),#flowResults .ingredients-table td:nth-child(5){display:none}
+.workspace.flow-detailed #flowResults .ingredients-table th:nth-child(3),.workspace.flow-detailed #flowResults .ingredients-table td:nth-child(3),.workspace.flow-detailed #flowResults .ingredients-table th:nth-child(5),.workspace.flow-detailed #flowResults .ingredients-table td:nth-child(5){display:table-cell}
+#flowResults .ingredients-table .ingredient-name{font-weight:700;color:#2b4935}
+#flowResults .ingredients-table .qty-value{display:inline-block;padding:5px 10px;border-radius:7px;background:#eaf5e7;color:#236944;font-weight:800;direction:ltr;white-space:nowrap}
+#flowResults .table-foot{padding:12px 16px;font-size:10px;color:#87998a}
+#flowResults .notice-card{display:flex;background:#fff5df;border:1px solid #f3dfb3;border-radius:9px;padding:10px 14px;margin-top:9px;font-size:11px}
+#flowResults .notice-card[hidden]{display:none!important}
+/* ON-DEMAND BASKET */
+.workspace.flow-ready #basketPanel:not([hidden]){position:fixed;top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:min(880px,calc(100vw - 24px));max-height:calc(100svh - 40px);overflow:auto;z-index:70;border-radius:15px;border:1px solid #dce9dc;box-shadow:0 24px 90px #12291d66;padding-bottom:12px;background:white}
+.workspace.flow-ready #basketPanel .panel-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.workspace.flow-ready #basketPanel .panel-top-actions{display:flex;flex-wrap:wrap;gap:7px}
+.workspace.flow-ready #basketPanel .ingredients-overflow{max-height:55svh;overflow:auto}
+.workspace.flow-ready .workspace-footer{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;color:#8d9b90;margin-top:23px;border:0;padding:0;text-align:center;font-size:11px}
+.workspace.flow-ready .workspace-footer button{display:none!important}
+.workspace.flow-ready .workspace-footer #storageStatus{font-size:10px}
+@media(max-width:850px){.workspace.flow-ready #recipeList{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){
+.global-top{min-height:57px;padding:7px 15px}.top-end{display:none}
+.workspace.flow-ready .main-content{padding:17px 13px 33px}
+.workspace.flow-ready .headline-bar{margin-bottom:20px;gap:10px}
+.workspace.flow-ready .headline-bar h1{font-size:20px}
+.workspace.flow-ready .headline-bar p{font-size:11px}
+.flow-progress{gap:4px;padding:0 1px;margin-bottom:18px}
+.flow-progress button{flex-direction:column;gap:5px;font-size:10px;line-height:1.3;min-width:70px}
+.flow-circle{width:30px;height:30px}
+.flow-connector{align-self:flex-start;margin-top:21px;min-width:8px}
+.flow-panel{padding:18px 15px;border-radius:14px;min-height:400px}
+.flow-heading{margin-bottom:18px}
+.flow-heading h2{font-size:22px}.flow-heading p{font-size:12px}
+.workspace.flow-ready #recipeList{grid-template-columns:repeat(2,minmax(0,1fr));max-height:340px;gap:7px}
+.workspace.flow-ready #recipeList button{min-height:79px;padding:9px}
+.workspace.flow-ready #recipeList .recipe-mini-copy b{font-size:11px}
+.flow-foot{align-items:stretch}.flow-foot .flow-btn{flex:1;white-space:nowrap;padding:10px}
+#flowBatch .recipe-detail-head{flex-wrap:wrap}
+#flowBatch .weight-field{max-width:100%}
+#flowBatch .weight-field input{font-size:29px}
+#flowResults .sum-panel{align-items:flex-start}
+#flowResults #addBasketBtn{flex-basis:100%;width:100%!important;margin:2px 0 0}
+#flowResults .ingredients-table th,#flowResults .ingredients-table td{padding:11px 9px;font-size:11px}
+.workspace.flow-detailed #flowResults .ingredients-table{min-width:540px}
+.flow-more-menu{left:0;right:auto}
+#toast{top:auto!important;bottom:18px!important;left:14px!important;right:14px!important;max-width:calc(100vw - 28px);text-align:center}
+}
+@media(max-width:400px){
+.workspace.flow-ready #recipeList{grid-template-columns:1fr}
+.workspace.flow-ready #recipeList button{min-height:61px}
+.flow-progress button{min-width:59px;font-size:9px}
+.workspace.flow-ready .header-actions>button,.workspace.flow-ready .flow-more>summary{min-height:34px;padding:6px 9px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.flow-panel{animation:none}}
+@media print{
+.global-top,.flow-progress,.flow-heading,.flow-foot,.flow-more,.headline-bar,.workspace-footer,#basketPanel{display:none!important}
+.flow-panel{box-shadow:none;border:0;padding:0}
+#flowStep1,#flowStep2{display:none!important}
+#flowStep3,#flowResults,#flowResults #recipeView{display:block!important}
+#flowResults #recipeView{flex-direction:column!important}
+#flowResults .panel-top-actions{display:none!important}
+}

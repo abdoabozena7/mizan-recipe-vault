@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10211d">
+  <meta name="description" content="حاسبة احترافية للخلطات والتتبيلات — بيانات مشفرة محليًا بدون خادم.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <title>ميزان | دفتر الخلطات الآمن</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/styles.css">
+  <script src="./assets/app.js" defer></script>
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="appTop" class="global-top">
+    <div class="brand">
+      <div class="brand-mark"><span>م</span><i></i></div>
+      <div class="brand-copy"><strong>ميزان<span class="brand-dot">.</span></strong><small>دفتر الخلطات الذكي</small></div>
+    </div>
+    <div class="top-end"><span class="network-pill"><span class="live-dot"></span> يعمل بدون سيرفر</span><span class="top-divider"></span><span class="top-status"><span aria-hidden="true">◇</span> بيانات مشفرة</span></div>
+  </div>
+
+  <section id="lockScreen" class="lock-screen" aria-labelledby="lockTitle">
+    <div class="lock-glow glow-one"></div><div class="lock-glow glow-two"></div>
+    <div class="lock-inner">
+      <div class="lock-intro">
+        <div class="eyebrow"><span class="mini-star">✳</span> مساحة عمل خاصة وآمنة</div>
+        <h1 id="lockTitle">كل خلطة ليها <em>ميزان.</em><br>وكل سر ليه <em>مفتاح.</em></h1>
+        <p>وصفاتك، حساباتك، ومقادير التشغيل في مكان واحد. الملف مشفر بالكامل، والتشفير بيتفك جوه متصفحك بس.</p>
+        <div class="lock-features"><span><span>✓</span> حسابات دقيقة</span><span><span>✓</span> ملفات JSON مشفرة</span><span><span>✓</span> من أي جهاز</span></div>
+      </div>
+      <div class="unlock-card">
+        <div class="shield-symbol"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 51 14v15c0 13-8 22-19 29C21 51 13 42 13 29V14L32 6Z" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="24" y="27" width="16" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M28 27v-5a4 4 0 0 1 8 0v5" fill="none" stroke="currentColor" stroke-width="2.5"/></svg></div>
+        <span class="upper-label">خزنة الخلطات</span>
+        <h2>أهلاً بيك من جديد</h2>
+        <p>ادخل مفتاح الفتح علشان تبدأ تحسب الخلطات.</p>
+        <form id="unlockForm">
+          <label class="field-label" for="passwordInput">مفتاح الفتح</label>
+          <div class="password-row"><input id="passwordInput" type="password" placeholder="أدخل المفتاح السري" autocomplete="current-password" required minlength="1" spellcheck="false"><button id="showPassword" type="button" class="text-button" aria-label="إظهار أو إخفاء المفتاح">إظهار</button></div>
+          <button id="unlockBtn" class="primary-button unlock-submit" type="submit"><span>فتح دفتر الخلطات</span><span class="arrow-icon">←</span></button>
+        </form>
+        <p id="unlockMessage" class="unlock-message" role="alert"></p>
+        <div class="secure-foot"><span>◈</span><span>AES-256-GCM · مش بنحتفظ بالمفتاح</span></div>
+      </div>
+    </div>
+    <div class="lock-bottom"><span>صُمم للخلطات اللي مينفعش تبقى مكشوفة.</span><span>ENCRYPTED BY DESIGN · V1.0</span></div>
+  </section>
+
+  <section id="workspace" class="workspace" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-heading"><span>مكتبة الوصفات</span><span id="recipeCounter" class="counter-badge">0</span></div>
+      <label class="search-box" for="recipeSearch"><span aria-hidden="true">⌕</span><input type="search" id="recipeSearch" placeholder="ابحث باسم الخلطة..." autocomplete="off"></label>
+      <div class="section-caption">الأقسام</div>
+      <nav id="categoryNav" class="category-nav" aria-label="تصنيف الوصفات"></nav>
+      <div class="sidebar-separator"></div>
+      <div class="section-caption">الخلطات</div>
+      <div id="recipeList" class="recipe-list" aria-label="الخلطات"></div>
+      <div class="sidebar-footer"><span class="sidebar-lock">✳</span><div><strong>أمان الخلطات</strong><small>الحسابات بتتم على جهازك فقط</small></div></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="mobile-nav"><button id="mobileRecipes" class="secondary-button" type="button">☰ &nbsp; عرض الخلطات</button><span>ميزان / لوحة التحكم</span></div>
+      <div class="headline-bar">
+        <div><div class="breadcrumbs"><span>مساحة العمل</span><span>/</span><span>حاسبة الخلطات</span></div><h1>لوحة <span>الخلطات</span></h1><p>كل المقادير محسوبة تلقائيًا، من كيلو لآلاف الكيلوهات.</p></div>
+        <div class="header-actions"><button type="button" id="notesToggle" class="outline-button">▧ &nbsp; الملاحظات المصوّرة</button><button type="button" id="basketToggle" class="outline-button"><span class="action-emoji">▤</span> قائمة التجهيز <span id="basketBadge" class="basket-count">0</span></button><button type="button" id="newRecipeBtn" class="primary-button"><span>＋</span> خلطة جديدة</button></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-ornament">◫</span><div class="stat-title">إجمالي الخلطات</div><strong id="totalRecipes">0</strong><small>من ملف الوصفات الأصلي</small></div>
+        <div class="stat-card"><span class="stat-ornament">∴</span><div class="stat-title">أقسام متنوعة</div><strong id="totalCategories">0</strong><small>مرتبة لسهولة الوصول</small></div>
+        <div class="stat-card"><span class="stat-ornament">▥</span><div class="stat-title">مكونات مسجلة</div><strong id="totalIngredients">0</strong><small>في جميع جداول الخلطات</small></div>
+        <div class="stat-card stat-card-accent"><span class="stat-ornament">◇</span><div class="stat-title">حالة الحماية</div><strong class="safe-text">مشفّر</strong><small>المفتاح عندك أنت بس</small></div>
+      </div>
+
+      <section id="recipeView" class="recipe-layout">
+        <div class="recipe-column">
+          <div class="panel recipe-head-panel">
+            <div class="recipe-detail-head"><div><div class="recipe-badges"><span class="tag tag-fill" id="recipeCategory">—</span><span class="tag" id="recipeStatus">وصفة محفوظة</span></div><h2 id="recipeTitle">اختار خلطة</h2><p id="recipeSource">—</p></div><button id="editRecipeBtn" class="icon-outline" type="button" title="تعديل الخلطة">✎ <span>تعديل</span></button></div>
+            <div class="batch-area"><div class="batch-input-group"><label for="batchWeight">كمية التشغيل المطلوبة</label><div class="weight-field"><input id="batchWeight" type="number" value="100" min="0.001" max="1000000000" step="any" inputmode="decimal"><span>كيلو</span></div><small id="baseInfo">اضبط الكمية لتحديث كل المقادير فورًا</small></div><div class="batch-presets"><label>قيم سريعة</label><div id="presetButtons" class="presets"><button type="button" data-qty="1">1</button><button type="button" data-qty="10">10</button><button type="button" data-qty="25">25</button><button type="button" data-qty="50">50</button><button type="button" data-qty="100">100</button><button type="button" data-qty="250">250</button><button type="button" data-qty="500">500</button></div></div></div>
+          </div>
+          <div class="panel ingredients-panel"><div class="panel-top"><div><div class="section-kicker">التركيبة التفصيلية</div><h3>جدول المكونات <span id="ingredientCount">0</span></h3></div><div class="panel-top-actions"><button id="copyRecipeBtn" type="button" class="small-action">نسخ</button><button id="printRecipeBtn" type="button" class="small-action">طباعة ↗</button></div></div><div class="ingredients-overflow"><table class="ingredients-table"><thead><tr><th>م</th><th>المكوّن</th><th>المعامل لكل كيلو</th><th>كمية التشغيل</th><th>تكلفة تقديرية</th></tr></thead><tbody id="ingredientBody"></tbody></table></div><div class="table-foot"><span>الأرقام بتتحسب مباشرة من المعاملات الأصلية بدون تقريب في الحساب.</span><span>الوحدات طبقًا للمصدر</span></div></div>
+        </div>
+        <div class="side-column">
+          <div class="panel sum-panel"><div class="section-kicker">ملخص التشغيل</div><h3>النتيجة على الميزان</h3><div class="big-number"><strong id="sumWeight">0</strong><span>كيلو إضافات*</span></div><div class="summary-line"><span>كمية التشغيل الأساسية</span><strong id="inputWeightLabel">—</strong></div><div class="summary-line"><span>عدد المكونات</span><strong id="sumComponents">—</strong></div><div class="summary-line"><span>تكلفة المكونات المدخلة</span><strong id="sumCost">—</strong></div><p class="sum-footnote">* مجموع الكميات بوحدات الكيلو/الجرام فقط، وليس وزن المنتج النهائي بالضرورة.</p><button type="button" id="addBasketBtn" class="primary-button full-width">＋ إضافة لقائمة التجهيز</button></div>
+          <div class="panel composition-panel"><div class="section-kicker">توزيع المكونات</div><h3>أكبر نسب في الخلطة</h3><div id="compositionBars" class="composition-bars"></div></div>
+          <div id="reviewNote" class="notice-card" hidden><span>!</span><div><strong>مراجعة مطلوبة</strong><p>بعض البيانات الأصلية ناقصة أو فيها معادلات بحاجة لتأكيد. راجعها قبل الاستخدام الفعلي.</p></div></div>
+        </div>
+      </section>
+
+      <section id="basketPanel" class="panel basket-panel" hidden><div class="panel-top"><div><div class="section-kicker">التجهيز المجمع</div><h3>قائمة المشتريات والتجهيز</h3></div><div class="panel-top-actions"><button type="button" id="downloadCsvBtn" class="small-action">تصدير CSV</button><button type="button" id="clearBasketBtn" class="small-action danger-action">مسح الكل</button><button type="button" id="closeBasketBtn" class="small-action">إغلاق ✕</button></div></div><div id="basketEntries" class="basket-entries"></div><div class="ingredients-overflow"><table class="ingredients-table"><thead><tr><th>م</th><th>اسم المكوّن</th><th>الإجمالي</th><th>الوحدة</th></tr></thead><tbody id="basketBody"></tbody></table></div></section>
+
+      <div class="workspace-footer"><span>ميزان © <span id="currentYear"></span></span><div><span id="storageStatus">بيانات محفوظة بتشفير محلي</span><button id="downloadEncrypted" type="button">↓ تصدير JSON مشفّر</button><button id="importEncrypted" type="button">↑ استيراد مشفّر</button><button id="resetRemote" type="button">استرجاع نسخة GitHub</button><button id="changePass" type="button">تغيير المفتاح</button><button id="lockBtn" type="button">قفل الدفتر ◈</button></div></div>
+    </main>
+  </section>
+
+  <div id="editorOverlay" class="overlay" hidden><div class="overlay-scrim" data-action="close-editor"></div><div class="editor-drawer" role="dialog" aria-modal="true" aria-labelledby="editorTitle"><div class="editor-top"><div><span class="section-kicker">إدارة التركيبات</span><h2 id="editorTitle">تعديل خلطة</h2></div><button class="close-btn" type="button" data-action="close-editor" aria-label="إغلاق">×</button></div><div class="editor-scroll"><div class="editor-fields"><label>اسم الخلطة<input id="editName" type="text" placeholder="اسم الوصفة" maxlength="150"></label><label>القسم<input id="editCategory" type="text" placeholder="القسم" maxlength="70"></label><label>أساس الحساب<input id="editBaseLabel" type="text" placeholder="مثلاً فيليه خام" maxlength="100"></label><label>الدفعة المرجعية (كيلو)<input id="editBaseQty" type="number" min="0.001" step="any"></label><label class="wide-field">ملاحظات إضافية<textarea id="editNotes" rows="2" placeholder="ملاحظات التشغيل والخلط..."></textarea></label></div><div class="editor-subhead"><h3>المكونات ومعاملاتها</h3><button id="addIngredientBtn" type="button" class="small-action">＋ مكون</button></div><p class="editor-help">المعامل = كمية المكوّن من نفس وحدته لكل 1 كيلو من الكمية الأساسية. مثال: 0.01 كيلو ملح لكل كيلو = 10 جرام.</p><div id="editIngredientList" class="edit-ingredient-list"></div></div><div class="editor-bottom"><button id="deleteRecipeBtn" class="danger-button" type="button">حذف</button><button id="saveRecipeBtn" class="primary-button" type="button">حفظ بالتشفير</button></div></div></div>
+  <div id="notesOverlay" class="notes-overlay" hidden><div class="overlay-scrim" data-action="close-notes"></div><div class="notes-dialog" role="dialog" aria-modal="true" aria-labelledby="notesTitle"><div class="editor-top"><div><span class="section-kicker">مرفقات مشفرة مع الخلطات</span><h2 id="notesTitle">الملاحظات المصورة</h2></div><button class="close-btn" data-action="close-notes" type="button" aria-label="إغلاق">×</button></div><p>الصور الأصلية محفوظة جوه ملف JSON المشفر، مش صور مكشوفة في ملفات GitHub.</p><div id="notesGallery" class="notes-gallery"></div></div></div>
+  <input type="file" id="encryptedFileInput" accept=".json,application/json" hidden>
+</body>
+</html>
